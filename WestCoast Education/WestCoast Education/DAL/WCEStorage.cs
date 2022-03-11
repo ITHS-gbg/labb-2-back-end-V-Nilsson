@@ -11,7 +11,7 @@ namespace WestCoast_Education.DAL.Models
         {
             _courses = new Dictionary<int, Course>();
         }
-        //TODO Create CRUD operations for Courses
+        
 
         public bool CreateCourse(Course course)
         {
@@ -30,6 +30,7 @@ namespace WestCoast_Education.DAL.Models
 
         public Course GetCourse(int id)
         {
+            // TODO Should retired courses be removed from this list??
             if (!_courses.Keys.Contains(id))
             {
                 return null;
@@ -56,6 +57,17 @@ namespace WestCoast_Education.DAL.Models
             }
 
             _courses.Remove(id);
+            return true;
+        }
+
+        public bool RetireCourse(int id)
+        {
+            if (!_courses.Keys.Contains(id))
+            {
+                return false;
+            }
+
+            _courses[id].IsActive = false;
             return true;
         }
     }

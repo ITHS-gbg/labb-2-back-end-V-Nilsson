@@ -1,0 +1,21 @@
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\bin\Debug\net6.0\appsettings.Development.json
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\bin\Debug\net6.0\appsettings.json
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\bin\Debug\net6.0\WestCoast Education.exe
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\bin\Debug\net6.0\WestCoast Education.deps.json
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\bin\Debug\net6.0\WestCoast Education.runtimeconfig.json
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\bin\Debug\net6.0\WestCoast Education.dll
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\bin\Debug\net6.0\WestCoast Education.pdb
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.csproj.AssemblyReference.cache
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.AssemblyInfoInputs.cache
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.AssemblyInfo.cs
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.csproj.CoreCompileInputs.cache
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\staticwebassets.build.json
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\staticwebassets.development.json
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\scopedcss\bundle\WestCoast Education.styles.css
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.dll
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\refint\WestCoast Education.dll
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.pdb
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.genruntimeconfig.cache
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\ref\WestCoast Education.dll
