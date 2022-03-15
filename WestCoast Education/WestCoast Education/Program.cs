@@ -4,6 +4,9 @@ using WestCoast_Education.DAL.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+builder.Services.AddRazorPages();
+
 builder.Services.AddSingleton<WCEStorage>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -20,7 +23,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseStaticFiles();
 app.UseAuthorization();
+app.MapRazorPages();
 app.MapControllers();
 
 app.Run();

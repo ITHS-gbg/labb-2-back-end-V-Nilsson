@@ -19,3 +19,8 @@ C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\We
 C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.pdb
 C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.genruntimeconfig.cache
 C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\ref\WestCoast Education.dll
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.RazorAssemblyInfo.cache
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\WestCoast Education.RazorAssemblyInfo.cs
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\bin\Debug\net6.0\WestCoast Education.staticwebassets.runtime.json
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\scopedcss\Pages\Shared\_Layout.cshtml.rz.scp.css
+C:\Users\victo\Documents\GitHub\labb-2-back-end-V-Nilsson\WestCoast Education\WestCoast Education\obj\Debug\net6.0\scopedcss\projectbundle\WestCoast Education.bundle.scp.css
