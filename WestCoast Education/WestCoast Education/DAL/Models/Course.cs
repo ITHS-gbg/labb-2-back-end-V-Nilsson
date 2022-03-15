@@ -7,6 +7,13 @@
         public string Description { get; set; }
         public int Length { get; set; }
 
+        public enum Level
+        {
+            Beginner,
+            Experienced,
+            Advanced
+        } 
+
         // Status, Active or retired. Gets set as active when we initiate a course
         public bool IsActive { get; set; } = true;
     }
