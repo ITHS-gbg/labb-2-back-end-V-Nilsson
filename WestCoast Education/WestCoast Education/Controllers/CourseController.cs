@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WestCoast_Education.DAL.Models;
 
 namespace WestCoast_Education.Controllers
 {
@@ -7,50 +8,62 @@ namespace WestCoast_Education.Controllers
     [ApiController]
     public class CourseController : ControllerBase
     {
-        //app.MapGet("/courses", ([FromServices] WCEStorage storage) =>
-    //    {
-    //        var courses = storage.GetAllCourses();
+        private readonly WCEStorage _wceStorage;
 
-    //        if (courses.Count <= 0)
-    //        {
-    //            return Results.NotFound();
-    //        }
+        public CourseController([FromServices] WCEStorage wceStorage)
+        {
+            _wceStorage = wceStorage;
+        }
 
-    //        return Results.Ok(courses);
-    //    });
+        [HttpGet]
+        public IResult GetCourses()
+        {
+            var courses = _wceStorage.GetAllCourses();
 
-    //app.MapGet("/courses/{id}", ([FromServices] WCEStorage storage, int id) =>
-    //{
-    //    var course = storage.GetCourse(id);
+            if (courses.Count <= 0)
+            {
+                return Results.NotFound();
+            }
 
-    //    return course is null ? Results.NotFound() : Results.Ok(course);
-    //});
+            return Results.Ok(courses);
+        }
 
-    //app.MapPost("/courses", ([FromServices] WCEStorage storage, Course course) =>
-    //{
-    //    if (course is null)
-    //    {
-    //        return Results.BadRequest();
-    //    }
 
-    //    return storage.CreateCourse(course) ? Results.Ok() : Results.Conflict();
-    //});
+        [HttpGet("{id}")]
+        public IResult GetCourse(int id)
+        {
+            var course = _wceStorage.GetCourse(id);
+            return course is null ? Results.NotFound() : Results.Ok(course);
 
-    //app.MapPut("/courses/{id}", ([FromServices] WCEStorage storage, Course course, int id) =>
-    //{
-    //    if (course is null)
-    //    {
-    //        return Results.BadRequest();
-    //    }
+        }
 
-    //    return storage.UpdateCourse(id, course) ? Results.Ok() : Results.Conflict();
+        [HttpPost]
+        public IResult CreateCourse([FromBody] Course course)
+        {
+            if (course is null)
+            {
+                return Results.BadRequest();
+            }
 
-    //});
+            return _wceStorage.CreateCourse(course) ? Results.Ok() : Results.Conflict();
+        }
 
-    //app.MapMethods("/courses/status/{id}", new[] { "PATCH" },
-    //    ([FromServices] WCEStorage storage, int id) =>
-    //    {
-    //        return storage.RetireCourse(id) ? Results.Ok() : Results.BadRequest();
-    //    });
-    //}
+        [HttpPut("{id}")]
+        public IResult UpdateCourse(int id, Course course)
+        {
+            if (course is null)
+            {
+                return Results.BadRequest();
+            }
+
+            return _wceStorage.UpdateCourse(id, course) ? Results.Ok() : Results.Conflict();
+        }
+
+        [HttpPatch("{id}")]
+        public IResult RetireCourse(int id)
+        {
+            return _wceStorage.RetireCourse(id) ? Results.Ok() : Results.BadRequest();
+        }
+
+    }
 }

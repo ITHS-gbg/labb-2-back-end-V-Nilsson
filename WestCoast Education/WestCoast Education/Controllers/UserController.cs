@@ -29,14 +29,14 @@ namespace WestCoast_Education.Controllers
         }
 
         [HttpGet("{id}")]
-        public IResult Get(int id)
+        public IResult GetUser(int id)
         {
             var user = _wceStorage.GetUser(id);
             return user is not null ? Results.Ok(user) : Results.NotFound();
         }
 
         [HttpPost]
-        public IResult Post([FromBody] User user)
+        public IResult CreateUser([FromBody] User user)
         {
             if (user is null)
                 return Results.BadRequest();
@@ -44,7 +44,7 @@ namespace WestCoast_Education.Controllers
             return _wceStorage.CreateUser(user) ? Results.Ok() : Results.Conflict();
         }
         [HttpPut("{id}")]
-        public IResult Put(int id, User user)
+        public IResult UpdateUser(int id, User user)
         {
             if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.Email))
                 return Results.BadRequest();
