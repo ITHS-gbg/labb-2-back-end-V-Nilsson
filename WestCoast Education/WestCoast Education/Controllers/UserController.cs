@@ -28,10 +28,16 @@ namespace WestCoast_Education.Controllers
             return Results.Ok(users);
         }
 
+        [HttpGet("/email/{email}")]
+        public IResult GetUser(string email)
+        {
+            var user = _wceStorage.GetUserByEmail(email);
+            return user is not null ? Results.Ok(user) : Results.NotFound();
+        }
         [HttpGet("{id}")]
         public IResult GetUser(int id)
         {
-            var user = _wceStorage.GetUser(id);
+            var user = _wceStorage.GetUserById(id);
             return user is not null ? Results.Ok(user) : Results.NotFound();
         }
 
@@ -42,6 +48,7 @@ namespace WestCoast_Education.Controllers
                 return Results.BadRequest();
 
             return _wceStorage.CreateUser(user) ? Results.Ok() : Results.Conflict();
+            
         }
         [HttpPut("{id}")]
         public IResult UpdateUser(int id, User user)

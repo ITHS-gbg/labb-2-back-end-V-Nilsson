@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WestCoast_Education.DAL;
 using WestCoast_Education.DAL.Models;
 
 namespace WestCoast_Education.Controllers
@@ -49,7 +50,7 @@ namespace WestCoast_Education.Controllers
         }
 
         [HttpPut("{id}")]
-        public IResult UpdateCourse(int id, Course course)
+        public IResult UpdateCourse(int id, [FromBody] Course course)
         {
             if (course is null)
             {
@@ -65,5 +66,10 @@ namespace WestCoast_Education.Controllers
             return _wceStorage.RetireCourse(id) ? Results.Ok() : Results.BadRequest();
         }
 
+        [HttpDelete("{id}")]
+        public IResult DeleteCourse(int id)
+        {
+            return _wceStorage.DeleteCourse(id) ? Results.Ok() : Results.BadRequest();
+        }
     }
 }

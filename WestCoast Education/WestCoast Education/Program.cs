@@ -1,17 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WestCoast_Education.DAL;
 using WestCoast_Education.DAL.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+// Injects WCEContext to the builder, and supplies the connectionstring
+builder.Services.AddDbContext<WCEContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("WCEDbConnectionsString"));
+});
 
-builder.Services.AddSingleton<WCEStorage>();
+builder.Services.AddRazorPages();
+builder.Services.AddScoped<WCEStorage>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
