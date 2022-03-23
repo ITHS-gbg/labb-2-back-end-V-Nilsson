@@ -69,7 +69,7 @@ namespace WestCoast_Education.Controllers
         [HttpDelete("{id}")]
         public IResult DeleteCourse(int id)
         {
-            return _wceStorage.DeleteCourse(id) ? Results.Ok() : Results.BadRequest();
+            return _wceStorage.DeleteCourse(id) ? Results.Ok() : Results.NotFound();
         }
     }
 }

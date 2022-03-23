@@ -28,18 +28,18 @@ namespace WestCoast_Education.Controllers
             return Results.Ok(users);
         }
 
-        [HttpGet("/email/{email}")]
+        [HttpGet("{email}")]
         public IResult GetUser(string email)
         {
             var user = _wceStorage.GetUserByEmail(email);
             return user is not null ? Results.Ok(user) : Results.NotFound();
         }
-        [HttpGet("{id}")]
-        public IResult GetUser(int id)
-        {
-            var user = _wceStorage.GetUserById(id);
-            return user is not null ? Results.Ok(user) : Results.NotFound();
-        }
+        //[HttpGet("{id}")]
+        //public IResult GetUser(int id)
+        //{
+        //    var user = _wceStorage.GetUserById(id);
+        //    return user is not null ? Results.Ok(user) : Results.NotFound();
+        //}
 
         [HttpPost]
         public IResult CreateUser([FromBody] User user)
