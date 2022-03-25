@@ -3,3 +3,133 @@
 @{
     ViewData["Title"] = "Deltagare";
 }
+
+<!-- Search user by id -->
+<div class="align-items-center justify-content-center text-center">
+    <h3>Sök på deltagarens email:</h3>
+    <input type="text" name="email" id="searched-email"/>
+    <button class="btn" id="search-user">Search</button>
+    <div id="show-user"></div>
+</div>
+
+<!-- All users -->
+<div class="row align-items-center justify-content-center g-0">
+
+    <h2 class="display-6 text-center my-5">Alla Deltagare</h2>
+    <div class="col-8 col-lg-8" id="show-users">
+              
+             
+
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        const users = [];
+
+        class User {
+            constructor() {
+                this.id = null;
+                this.firstName = null;
+                this.lastName = null;
+                this.email = null;
+                this.cellphone = null;
+                this.city = null;
+                this.zipcode = null;
+                this.street = null;
+                this.takenCourses = null;
+            }
+        }
+
+        //fetch structure
+        const showUsers = () => {
+
+            fetch("/api/User")
+                .then(response => response.json())
+                .then(data => {
+                    // Do stuff
+                    console.log(data.value);
+                    const allUsers = data.value;
+                    for (let i = 0; i < allUsers.length; i++) {
+                        const user = new User();
+                        user.id = allUsers[i].id;
+                        user.firstName = allUsers[i].firstName;
+                        user.lastName = allUsers[i].lastName;
+                        user.email = allUsers[i].email;
+                        user.cellphone = allUsers[i].cellphone;
+                        user.city = allUsers[i].city;
+                        user.zipcode = allUsers[i].zipcode;
+                        user.street = allUsers[i].street;
+                        user.takenCourses = allUsers[i].takenCourses;
+                        users.push(user);
+                    }
+                    displayUsers(users);
+                });
+        }
+
+        showUsers();
+
+        function displayUsers(array) {
+            for (let i = 0; i < array.length; i++) {
+                const user = array[i];
+                let innerHTML = `
+                    <div class="card border-3">
+                        <div class="card-body text-center py-4" >
+                            <h4 id="${user.firstName}">${user.firstName} ${user.lastName}</h4>
+                            <p>${user.email}</p>
+                            <button class="btn mt-3" onclick="editUser(${user.id})">Uppdatera uppgifter</button>
+                        </div>
+                    </div>`;
+                document.getElementById("show-users").innerHTML += innerHTML;
+            }
+        }
+
+        //Search user by email
+        const showUserDiv = document.getElementById("show-user");
+        const getUser = document.getElementById("search-user");
+
+        getUser.addEventListener("click",
+            () => {
+                const searchedEmail = document.getElementById("searched-email").value;
+                showUser(searchedEmail);
+            });
+
+
+        const showUser = (email) => {
+            showUserDiv.innerHTML = "";
+            fetch(`/api/User/${email}`)
+                .then(response => response.json())
+                .then(data => {
+                    const user = data.value;
+                    showUserByEmail(user);
+
+                });
+        }
+
+        function showUserByEmail(user) {
+            if (user == null) {
+                let innerHTML = `
+                        <div class="card border-3">
+                            <div class="card-body text-center py-4" >
+                                <h4>Det finns ingen deltagare med denna email</h4>
+                                </div>
+                                </div>
+                        `;
+                document.getElementById("show-user").innerHTML += innerHTML;
+            }
+
+            // Show new course
+            let innerHTML = `
+                    <div class="card border-3">
+                    <div class="card-body text-center py-4" >
+                    <h4 id="${user.id}">${user.firstName} ${user.lastName}</h4>
+                    </div>
+                    </div>
+                    `;
+            document.getElementById("show-user").innerHTML += innerHTML;
+        }
+
+    </script>
+}

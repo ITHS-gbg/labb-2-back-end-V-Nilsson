@@ -23,7 +23,7 @@
     <!-- End of popular courses -->
     
     <!-- Search course by id -->
-    <div class="align-items-center justify-content-center text-center" id="searchCourse">
+    <div class="align-items-center justify-content-center text-center">
         <h3>Skriv in kursens id</h3>
         <input type="number" name="id" id="searched-id"/>
         <button class="btn" id="search-course">Search</button>
@@ -43,12 +43,6 @@
 
 </section>
 
-
-
-
-   
-
-    <!-- End of add course Modal -->
 
     <!-- Offcanvas for cart -->
     <div class="offcanvas offcanvas-end" id="cart">
@@ -228,37 +222,34 @@
         }
 
         // Get data from modal inputs and create a new course
-        function addCourse() {
-            let number = document.getElementById("modal-courseNumber").value;
-            let title = document.getElementById("modal-courseTitle").value;
-            let description = document.getElementById("modal-description").value;
-            let length = document.getElementById("modal-lengthInMinutes").value;
+        //function addCourse() {
+        //    let number = document.getElementById("modal-courseNumber").value;
+        //    let title = document.getElementById("modal-courseTitle").value;
+        //    let description = document.getElementById("modal-description").value;
+        //    let length = document.getElementById("modal-lengthInMinutes").value;
 
-            var correctInput = validateInput();
-            if (!correctInput) {
-                return;
-            }
-            // TODO Behöver vi göra om detta när vi har en tom constructor nu?
-            const newCourse = {
-                "id": number,
-                "title": title,
-                "description": description,
-                "length": length,
-                "rating": null
-            }
-            const course = new Course(newCourse);
-            courses.push(course);
+        //    var correctInput = validateInput();
+        //    if (!correctInput) {
+        //        return;
+        //    }
+        //    // TODO Behöver vi göra om detta när vi har en tom constructor nu?
+        //    const newCourse = {
+        //        "id": number,
+        //        "title": title,
+        //        "description": description,
+        //        "length": length,
+        //        "rating": null
+        //    }
+        //    const course = new Course(newCourse);
+        //    courses.push(course);
 
-            document.getElementById("modal-courseNumber").value = "";
-            document.getElementById("modal-courseTitle").value = "";
-            document.getElementById("modal-description").value = "";
-            document.getElementById("modal-lengthInMinutes").value = "";
+        //    document.getElementById("modal-courseNumber").value = "";
+        //    document.getElementById("modal-courseTitle").value = "";
+        //    document.getElementById("modal-description").value = "";
+        //    document.getElementById("modal-lengthInMinutes").value = "";
 
-            displayNewCourse(course);
-        }
-        
-
-        
+        //    displayNewCourse(course);
+        //}
 
         //fetch structure
         const showCourses = () => {
@@ -298,16 +289,15 @@
                 showCourse(searchedId);
             });
 
-        
+
         const showCourse = (id) => {
             showCourseDiv.innerHTML = "";
-            fetch("/api/Course/" + id)
+            fetch(`/api/Course/${id}`)
                 .then(response => response.json())
                 .then(data => {
                     const course = data.value;
-                    console.log(course);
                     showCourseById(course);
-                    
+
                 });
         }
 
