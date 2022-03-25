@@ -4,3 +4,272 @@
     ViewData["Title"] = "Admin";
 }
 
+<!-- All courses -->
+<div class="row align-items-center justify-content-center g-0">
+    <h2 class="display-6 text-center my-5">Alla Kurser</h2>
+    <div class="col-8 col-lg-8" id="courseTitle">
+    </div>
+</div>
+
+<!-- Edit Course Modal-->
+<div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="modal2-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal2-title">
+                    Ändra kurs
+                </h5>
+                <button
+                    class="btn-close"
+                    type="button"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="newCourseForm">
+                    <label for="modal-courseTitle" class="form-label">Kurstitel:</label>
+                    <input type="text" class="form-control" id="modal-courseTitle" placeholder="Namn på kursen">
+                    <label for="modalDescription" class="form-label">Beskrivning:</label>
+                    <input type="text" class="form-control" id="modal-description" placeholder="Kort beskrivning av kursen">
+                    <label for="modal-lengthInMinutes" class="form-label">Kursens Längd:</label>
+                    <input type="number" class="form-control" id="modal-lengthInMinutes" placeholder="Kursens tid i minuter" required>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="editCourse()">Spara ändringar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add course modal -->
+<div class="container text-center my-5">
+    <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#addCourseModal">Lägg till kurs</button>
+</div>
+
+<div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="modal2-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal2-title">
+                    Lägg till kurs
+                </h5>
+                <button
+                    class="btn-close"
+                    type="button"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="new-course-form" action="api/Course" method="post">
+                    <label for="modal-courseTitle" class="form-label">Kurstitel:</label>
+                    <input type="text" class="form-control" name="title" id="modalCourseTitle" placeholder="Namn på kursen">
+                    <label for="modalDescription" class="form-label">Beskrivning:</label>
+                    <input type="text" class="form-control" name="description" id="modalDescription" placeholder="Kort beskrivning av kursen">
+                    <label for="modal-lengthInMinutes" class="form-label">Kursens Längd:</label>
+                    <input type="number" class="form-control" name="length" id="modal-length" placeholder="Kursens tid i minuter" required>
+                </form>
+            </div>
+            <div class="modal-footer">
+                @*onclick="addCourse()" removed for now*@
+                <button class="btn" id="add-course">Lägg till kurs</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        const addCourse = document.getElementById("add-course");
+        addCourse.addEventListener("click", () => {
+            const form = document.getElementById("new-course-form").elements;
+            const course = new Course();
+            course.title = form.namedItem("title").value;
+            course.description = form.namedItem("description").value;
+            course.length = parseInt(form.namedItem("length").value);
+            const correctInput = validateInput(course);
+            if (!correctInput) {
+                return;
+            }
+            postData("api/Course", course);
+            displayNewCourse(course);
+        });
+
+        const postData = (url = '', data = {}) => {
+            fetch(url,
+                {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+            resetModal();
+        }
+        function displayNewCourse(course) {
+            let innerHTML = `
+            <div class="card border-3">
+            <div class="card-body text-center py-4" >
+            <h4 id="${course.title}">${course.title}</h4>
+            <p>${course.description}</p>
+            <button class="btn mt-3" type="button" data-bs-toggle="modal" data-bs-target="#editCourseModal" onclick="openEditModal(${course.id})">Ändra kurs</button>
+            <button class="btn mt-3" onclick="removeCourse(${course.id})">Ta bort kurs</button>
+            <button class="btn mt-3" onclick="retireCourse(${course.id})">Pensionera kurs</button>
+            </div>
+            </div>`;
+            document.getElementById("courseTitle").innerHTML += innerHTML;
+        }
+
+        // Validate input to add course
+        function validateInput(course) {
+            if (course.title === "" || course.description === "") {
+                alert("Fyll i alla uppgifter");
+                return false;
+            }
+
+            if (isNaN(course.length) || course.length === "") {
+                alert("Längden saknas eller är i fel format, försök igen");
+                return false;
+            }
+            return true;
+        }
+
+        function resetModal() {
+            document.getElementById("modalCourseTitle").value = "";
+            document.getElementById("modalDescription").value = "";
+            document.getElementById("modal-length").value = "";
+        }
+
+        class Course {
+            constructor() {
+                this.id = null;
+                this.title = null;
+                this.description = null;
+                this.length = null;
+                this.rating = null;
+                this.isActive = true;
+            }
+        }
+
+        const courses = [];
+        // Get courses and display them
+        const showCourses = () => {
+
+            fetch("/api/Course")
+                .then(response => response.json())
+                .then(data => {
+                    // Do stuff
+                    const allCourses = data.value;
+                    for (let i = 0; i < allCourses.length; i++) {
+                        const course = new Course();
+                        course.title = allCourses[i].title;
+                        course.id = allCourses[i].id;
+                        course.description = allCourses[i].description;
+                        course.isActive = allCourses[i].isActive;
+                        course.length = allCourses[i].length;
+                        course.rating = allCourses[i].rating;
+                        courses.push(course);
+                    }
+                    displayCourses(courses);
+                });
+        }
+        showCourses();
+
+        function displayCourses(array) {
+            for (let i = 0; i < array.length; i++) {
+                // Empty content for when we update courses after removal or addition
+                document.getElementById("courseTitle").innerHTML += '';
+
+                const course = array[i];
+                let courseStatus = null;
+                if (course.isActive === true) {
+                    courseStatus = "Aktiv";
+                } else {
+                    courseStatus = "Pensionerad";
+                }
+
+
+                let innerHTML = `
+                    <div class="card border-3">
+                        <div class="card-body text-center py-4" >
+                            <h4 id="${course.title}">${course.title}</h4>
+                            <h4>${courseStatus}<h4>
+                            <button class="btn mt-3" type="button" data-bs-toggle="modal" data-bs-target="#editCourseModal" onclick="openEditModal(${course.id})">Ändra kurs</button>
+                            <button class="btn mt-3" onclick="removeCourse(${course.id})">Ta bort kurs</button>
+                            <button class="btn mt-3" onclick="retireCourse(${course.id})">Pensionera kurs</button>
+                        </div>
+                    </div>`;
+                document.getElementById("courseTitle").innerHTML += innerHTML;
+            }
+        }
+
+        function openEditModal(id) {
+            //const course = courses(c => );
+
+    //        let innerHTML = `
+    //         <div class="modal-dialog">
+    //         <div class="modal-content">
+    //         <div class="modal-header">
+    //            <h5 class="modal-title" id="modal2-title">
+    //                Ändra kurs
+    //            </h5>
+    //            <button
+    //                class="btn-close"
+    //                type="button"
+    //                data-bs-dismiss="modal"
+    //                aria-label="Close"
+    //            ></button>
+    //        </div>
+    //        <div class="modal-body">
+    //            <form id="newCourseForm">
+    //                <label for="modal-courseTitle" class="form-label">Kurstitel:</label>
+    //                <input type="text" class="form-control" id="modal-courseTitle" placeholder="Namn på kursen">
+    //                <label for="modalDescription" class="form-label">Beskrivning:</label>
+    //                <input type="text" class="form-control" id="modal-description" placeholder="Kort beskrivning av kursen">
+    //                <label for="modal-lengthInMinutes" class="form-label">Kursens Längd:</label>
+    //                <input type="number" class="form-control" id="modal-lengthInMinutes" value="Test me!">
+    //            </form>
+    //        </div>
+    //        <div class="modal-footer">
+    //            <button class="btn" onclick="editCourse()">Spara ändringar</button>
+    //        </div>
+    //    </div>
+    //</div>
+    //        `;
+
+            document.getElementById("editCourseModal").innerHTML += innerHTML;
+        }
+
+        function editCourse(id) {
+            // TODO Open course info in modal? Call API put on api/Course/id
+        }
+
+        //courseToRemove.addEventListener("click", 
+        //    () => {
+        //        const removeId = document.getElementById("remove-course").value;
+        //        console.log("Testing");
+        //        removeCourse(removeId);
+        //        displayCourses(courses);
+        //    } );
+
+        const removeCourse = (id) => {
+            fetch(`api/Course/${id}`,
+                {
+                    method: "delete"
+                });
+            // TODO Refresh page without the removed course
+        }
+
+        const retireCourse = (id) => {
+            fetch(`api/Course/${id}`,
+                {
+                    method: "patch"
+                });
+            window.alert("Kursen är nu pensionerad");
+        }
+
+    </script>
+}

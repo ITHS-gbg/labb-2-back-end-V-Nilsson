@@ -39,7 +39,7 @@ namespace WestCoast_Education.Controllers
         }
 
         [HttpPost]
-        public IResult CreateCourse([FromBody] Course course)
+        public IResult CreateCourse([FromBody]Course course)
         {
             if (course is null)
             {
