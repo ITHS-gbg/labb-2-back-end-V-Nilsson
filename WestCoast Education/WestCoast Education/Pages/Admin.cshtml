@@ -70,7 +70,7 @@
                 course.title = form.namedItem("title").value;
                 course.description = form.namedItem("description").value;
                 course.length = parseInt(form.namedItem("length").value);
-                course.level = form.namedItem("level").value;
+                course.level = parseInt(form.namedItem("course-level").value);
                 const correctInput = validateInput(course);
                 if (!correctInput) {
                     return;
