@@ -4,7 +4,7 @@
 
 namespace WestCoast_Education.Migrations
 {
-    public partial class WCEMig : Migration
+    public partial class wcedb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -38,6 +38,7 @@ namespace WestCoast_Education.Migrations
                     Length = table.Column<int>(type: "int", nullable: false),
                     Rating = table.Column<double>(type: "float", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Level = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>

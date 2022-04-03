@@ -31,12 +31,24 @@
             </div>
             <div class="modal-body">
                 <form id="new-course-form" action="api/Course" method="post">
-                    <label for="modal-courseTitle" class="form-label">Kurstitel:</label>
+                    <label for="modalCourseTitle" class="form-label">Kurstitel:</label>
                     <input type="text" class="form-control" name="title" id="modalCourseTitle" placeholder="Namn på kursen">
+
                     <label for="modalDescription" class="form-label">Beskrivning:</label>
                     <input type="text" class="form-control" name="description" id="modalDescription" placeholder="Kort beskrivning av kursen">
-                    <label for="modal-lengthInMinutes" class="form-label">Kursens Längd:</label>
+
+                    <label for="modal-length" class="form-label">Kursens Längd:</label>
                     <input type="number" class="form-control" name="length" id="modal-length" placeholder="Kursens tid i minuter" required>
+                    
+                    <p>Välj nivå på kursen:</p>
+                    <input type="radio" id="beginner" name="course-level" value="0"/>
+                    <label for="beginner" class="form-label">Nybörjare</label>
+                    
+                    <input type="radio" id="intermediate" name="course-level" value="1"/>
+                    <label for="intermediate" class="form-label">Medel</label>
+                    
+                    <input type="radio" id="advanced" name="course-level" value="2"/>
+                    <label for="advanced" class="form-label">Avancerad</label>
                 </form>
             </div>
             <div class="modal-footer">
@@ -58,6 +70,7 @@
                 course.title = form.namedItem("title").value;
                 course.description = form.namedItem("description").value;
                 course.length = parseInt(form.namedItem("length").value);
+                course.level = form.namedItem("level").value;
                 const correctInput = validateInput(course);
                 if (!correctInput) {
                     return;
@@ -85,6 +98,7 @@
             course.title = form.namedItem("title").value;
             course.description = form.namedItem("description").value;
             course.length = parseInt(form.namedItem("length").value);
+            course.level = parseInt(form.namedItem("level").value);
             fetch(`api/Course/${id}`,
                 {
                     method: "put",
@@ -94,7 +108,7 @@
                     body: JSON.stringify(course)
                 });
         }
-   
+
         // Validate input to add course
         function validateInput(course) {
             if (course.title === "" || course.description === "") {
@@ -123,6 +137,7 @@
                 this.length = null;
                 this.rating = null;
                 this.isActive = true;
+                this.level = null;
             }
         }
 
@@ -143,6 +158,7 @@
                         course.isActive = allCourses[i].isActive;
                         course.length = allCourses[i].length;
                         course.rating = allCourses[i].rating;
+                        course.level = allCourses[i].level;
                         courses.push(course);
                     }
                     displayCourses(courses);
@@ -156,20 +172,27 @@
                 document.getElementById("courseTitle").innerHTML += '';
                 const course = array[i];
                 let courseStatus = null;
+                let currentLevel = null;
                 if (course.isActive === true) {
                     courseStatus = "Aktiv";
                 } else {
                     courseStatus = "Pensionerad";
+                }
+                if (course.level == 0) {
+                    currentLevel = "Nybörjare"
+                } else if (course.level == 1) {
+                    currentLevel = "Medel";
+                } else {
+                    currentLevel = "Avancerad";
 
                 }
-
                 // From update course button
                 // data-bs-toggle="modal" data-bs-target="#editCourseModal
                 let innerHTML = `
                     <div class="card border-3">
                         <div class="card-body text-center py-4" >
                             <form id="update-course${course.id}" action="api/Course/${course.id}" method="put">
-                                <label for="modal-courseTitle" class="form-label">Kurstitel:</label>
+                                <label for="edit-courseTitle" class="form-label">Kurstitel:</label>
                                 <input type="text" name="title" class="form-control" id="edit-courseTitle" value="${course.title}">
 
                                 <label for="modalDescription" class="form-label">Beskrivning:</label>
@@ -178,8 +201,21 @@
                                 <label for="modal-lengthInMinutes" class="form-label">Kursens Längd:</label>
                                 <input type="number" name="length" class="form-control" id="edit-length" value="${course.length}">
 
+                                <p>Nuvarande Kursnivå: ${currentLevel}</p>
+                                <input type="radio" id="beginner" name="level" value="0"/>
+                                <label for="beginner" class="form-label">Nybörjare</label>
+                                
+                                <input type="radio" id="intermediate" name="level" value="1" checked=true />
+                                <label for="intermediate" class="form-label">Medel</label>
+                                
+                                <input type="radio" id="advanced" name="level" value="2"/>
+                                <label for="advanced" class="form-label">Avancerad</label>
+                                
+
                                 </form>
+
                                 <h5>Status: ${courseStatus}</h5>
+
                                 <button class="btn mt-3" type="button" id="edit-course" onclick="editCourse(${course.id})">Spara ändringar</button>
                                 <button class="btn mt-3" onclick="removeCourse(${course.id})">Ta bort kurs</button>
                                 <button class="btn mt-3" onclick="retireCourse(${course.id})">Pensionera kurs</button>
@@ -187,7 +223,6 @@
                             
                         </div>
                     </div>`;
-                //const retireButton = document.getElementById('retireCourse');
 
                 document.getElementById("courseTitle").innerHTML += innerHTML;
             }

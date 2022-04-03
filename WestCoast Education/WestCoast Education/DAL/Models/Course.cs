@@ -2,6 +2,12 @@
 {
     public class Course
     {
+        public enum CourseLevel
+        {
+            Beginner,
+            Intermediate,
+            Advanced
+        }
         public Course(string title, string description, int length)
         {
             Title = title;
@@ -15,8 +21,10 @@
 
         public double? Rating { get; set; } = null;
 
-
         // Status, Active or retired. Gets set as active when we initiate a course
         public bool IsActive { get; set; } = true;
+
+        public CourseLevel Level { get; set; } 
+
     }
 }

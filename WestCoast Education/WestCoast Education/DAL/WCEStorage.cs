@@ -46,6 +46,7 @@ namespace WestCoast_Education.DAL.Models
             newCourse.Title = course.Title;
             newCourse.Description = course.Description;
             newCourse.Length = course.Length;
+            newCourse.Level = course.Level;
             _wceContext.SaveChanges();
             return true;
         }

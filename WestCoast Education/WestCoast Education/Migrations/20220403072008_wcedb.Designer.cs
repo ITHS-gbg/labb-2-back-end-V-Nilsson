@@ -12,8 +12,8 @@ using WestCoast_Education.DAL;
 namespace WestCoast_Education.Migrations
 {
     [DbContext(typeof(WCEContext))]
-    [Migration("20220318110815_WCEMig")]
-    partial class WCEMig
+    [Migration("20220403072008_wcedb")]
+    partial class wcedb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,11 @@ namespace WestCoast_Education.Migrations
 
             modelBuilder.Entity("WestCoast_Education.DAL.Models.Course", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -40,6 +40,9 @@ namespace WestCoast_Education.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int>("Length")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Level")
                         .HasColumnType("int");
 
                     b.Property<double?>("Rating")
@@ -61,11 +64,11 @@ namespace WestCoast_Education.Migrations
 
             modelBuilder.Entity("WestCoast_Education.DAL.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"), 1L, 1);
 
                     b.Property<string>("Cellphone")
                         .IsRequired()
