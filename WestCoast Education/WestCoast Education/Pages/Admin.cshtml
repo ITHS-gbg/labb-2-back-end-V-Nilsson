@@ -1,0 +1,245 @@
+﻿@page
+@model WestCoast_Education.Pages.AdminModel
+@{
+    ViewData["Title"] = "Admin";
+}
+<!-- All courses -->
+<div class="row align-items-center justify-content-center g-0">
+    <h2 class="display-6 text-center my-5">Alla Kurser</h2>
+    <div class="col-8 col-lg-8" id="courseTitle">
+    </div>
+</div>
+
+<!-- Add course modal -->
+<div class="container text-center my-5">
+    <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#addCourseModal">Lägg till kurs</button>
+</div>
+
+<div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="modal2-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal2-title">
+                    Lägg till kurs
+                </h5>
+                <button
+                    class="btn-close"
+                    type="button"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="new-course-form" action="api/Course" method="post">
+                    <label for="modalCourseTitle" class="form-label">Kurstitel:</label>
+                    <input type="text" class="form-control" name="title" id="modalCourseTitle" placeholder="Namn på kursen">
+
+                    <label for="modalDescription" class="form-label">Beskrivning:</label>
+                    <input type="text" class="form-control" name="description" id="modalDescription" placeholder="Kort beskrivning av kursen">
+
+                    <label for="modal-length" class="form-label">Kursens Längd:</label>
+                    <input type="number" class="form-control" name="length" id="modal-length" placeholder="Kursens tid i minuter" required>
+                    
+                    <p>Välj nivå på kursen:</p>
+                    <input type="radio" id="beginner" name="course-level" value="0"/>
+                    <label for="beginner" class="form-label">Nybörjare</label>
+                    
+                    <input type="radio" id="intermediate" name="course-level" value="1"/>
+                    <label for="intermediate" class="form-label">Medel</label>
+                    
+                    <input type="radio" id="advanced" name="course-level" value="2"/>
+                    <label for="advanced" class="form-label">Avancerad</label>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="add-course">Lägg till kurs</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        // Adding new Course
+        const addCourse = document.getElementById("add-course");
+        addCourse.addEventListener("click",
+            () => {
+                const form = document.getElementById("new-course-form").elements;
+                const course = new Course();
+                course.title = form.namedItem("title").value;
+                course.description = form.namedItem("description").value;
+                course.length = parseInt(form.namedItem("length").value);
+                course.level = parseInt(form.namedItem("course-level").value);
+                const correctInput = validateInput(course);
+                if (!correctInput) {
+                    return;
+                }
+                postData("api/Course", course);
+            });
+
+        const postData = (url = '', data = {}) => {
+            fetch(url,
+                {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+            alert("Kursen har lagts till. Stäng ner fönstet och uppdatera sidan för att se den i listan.");
+            resetModal();
+        }
+
+        // Put request on Course
+        const editCourse = (id) => {
+            const form = document.getElementById(`update-course${id}`).elements;
+            const course = new Course();
+            course.title = form.namedItem("title").value;
+            course.description = form.namedItem("description").value;
+            course.length = parseInt(form.namedItem("length").value);
+            course.level = parseInt(form.namedItem("level").value);
+            fetch(`api/Course/${id}`,
+                {
+                    method: "put",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(course)
+                });
+        }
+
+        // Validate input to add course
+        function validateInput(course) {
+            if (course.title === "" || course.description === "") {
+                alert("Fyll i alla uppgifter");
+                return false;
+            }
+
+            if (isNaN(course.length) || course.length === "") {
+                alert("Längden saknas eller är i fel format, försök igen");
+                return false;
+            }
+            return true;
+        }
+
+        function resetModal() {
+            document.getElementById("modalCourseTitle").value = "";
+            document.getElementById("modalDescription").value = "";
+            document.getElementById("modal-length").value = "";
+        }
+
+        class Course {
+            constructor() {
+                this.id = null;
+                this.title = null;
+                this.description = null;
+                this.length = null;
+                this.rating = null;
+                this.isActive = true;
+                this.level = null;
+            }
+        }
+
+        const courses = [];
+        // Get courses and display them
+        const showCourses = () => {
+
+            fetch("/api/Course")
+                .then(response => response.json())
+                .then(data => {
+                   
+                    const allCourses = data.value;
+                    for (let i = 0; i < allCourses.length; i++) {
+                        const course = new Course();
+                        course.title = allCourses[i].title;
+                        course.id = allCourses[i].id;
+                        course.description = allCourses[i].description;
+                        course.isActive = allCourses[i].isActive;
+                        course.length = allCourses[i].length;
+                        course.rating = allCourses[i].rating;
+                        course.level = allCourses[i].level;
+                        courses.push(course);
+                    }
+                    displayCourses(courses);
+                });
+        }
+        showCourses();
+
+        function displayCourses(array) {
+            for (let i = 0; i < array.length; i++) {
+                
+                const course = array[i];
+                let courseStatus = null;
+                let currentLevel = null;
+                if (course.isActive === true) {
+                    courseStatus = "Aktiv";
+                } else {
+                    courseStatus = "Pensionerad";
+                }
+                if (course.level == 0) {
+                    currentLevel = "Nybörjare"
+                } else if (course.level == 1) {
+                    currentLevel = "Medel";
+                } else {
+                    currentLevel = "Avancerad";
+
+                }
+                let innerHTML = `
+                    <div class="card border-3">
+                        <div class="card-body text-center py-4" >
+                            <form id="update-course${course.id}" action="api/Course/${course.id}" method="put">
+                                <label for="edit-courseTitle" class="form-label">Kurstitel:</label>
+                                <input type="text" name="title" class="form-control" id="edit-courseTitle" value="${course.title}">
+
+                                <label for="modalDescription" class="form-label">Beskrivning:</label>
+                                <input type="text" name="description" class="form-control" id="edit-description" value="${course.description}">
+
+                                <label for="modal-lengthInMinutes" class="form-label">Kursens Längd:</label>
+                                <input type="number" name="length" class="form-control" id="edit-length" value="${course.length}">
+
+                                <p>Nuvarande Kursnivå: ${currentLevel}</p>
+                                <input type="radio" id="beginner" name="level" value="0"/>
+                                <label for="beginner" class="form-label">Nybörjare</label>
+                                
+                                <input type="radio" id="intermediate" name="level" value="1" checked=true />
+                                <label for="intermediate" class="form-label">Medel</label>
+                                
+                                <input type="radio" id="advanced" name="level" value="2"/>
+                                <label for="advanced" class="form-label">Avancerad</label>
+                                
+
+                                </form>
+
+                                <h5>Status: ${courseStatus}</h5>
+
+                                <button class="btn mt-3" type="button" id="edit-course" onclick="editCourse(${course.id})">Spara ändringar</button>
+                                <button class="btn mt-3" onclick="removeCourse(${course.id})">Ta bort kurs</button>
+                                <button class="btn mt-3" onclick="retireCourse(${course.id})">Pensionera kurs</button>
+                                <div id="${course.id}"></div>
+                            
+                        </div>
+                    </div>`;
+
+                document.getElementById("courseTitle").innerHTML += innerHTML;
+            }
+        }
+
+        const removeCourse = (id) => {
+            fetch(`api/Course/${id}`,
+                {
+                    method: "delete"
+                });
+            alert("Kursen är borttagen. Uppdatera sidan för att visa förändringar");
+        }
+
+        const retireCourse = (id) => {
+            fetch(`api/Course/${id}`,
+                {
+                    method: "patch"
+                });
+            alert("Kursen är nu pensionerad");
+        }
+
+    </script>
+}

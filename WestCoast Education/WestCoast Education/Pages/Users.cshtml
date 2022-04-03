@@ -1,0 +1,256 @@
+﻿@page
+@model WestCoast_Education.Pages.UsersModel
+@{
+    ViewData["Title"] = "Deltagare";
+}
+<!-- Register user modal-->
+<div class="text-center my-3">
+    <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#addUserModal">Registrera dig</button>
+</div>
+
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="modal2-title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal2-title">
+                    Registrera deltagare
+                </h5>
+                <button
+                    class="btn-close"
+                    type="button"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="new-user-form" action="api/User" method="post">
+                    <label for="modal-firstName" class="form-label">Förnamn:</label>
+                    <input type="text" class="form-control" name="firstName" id="modalFirstName">
+
+                    <label for="modal-lastName" class="form-label">Efternamn:</label>
+                    <input type="text" class="form-control" name="lastName" id="modalLastName">
+
+                    <label for="modal-email" class="form-label">Email:</label>
+                    <input type="text" class="form-control" name="email" id="modalEmail">
+
+                    <label for="modal-cellphone" class="form-label">Telefonnummer:</label>
+                    <input type="text" class="form-control" name="cellphone" id="modal-cellphone">
+
+                    <label for="modal-city" class="form-label">Stad:</label>
+                    <input type="text" class="form-control" name="city" id="modal-city">
+
+                    <label for="modal-zipcode" class="form-label">Postnummer:</label>
+                    <input type="text" class="form-control" name="zipcode" id="modal-zipcode">
+                    
+                    <label for="modal-street" class="form-label">Gata:</label>
+                    <input type="text" class="form-control" name="street" id="modal-steet">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="add-user">Registrera dig</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search user by id -->
+<div class="align-items-center justify-content-center text-center">
+    <h3>Sök på deltagarens email:</h3>
+    <input type="text" name="email" id="searched-email"/>
+    <button class="btn" id="search-user">Search</button>
+    <div id="show-user"></div>
+</div>
+
+<!-- All users -->
+<div class="row align-items-center justify-content-center g-0">
+
+    <h2 class="display-6 text-center my-5">Alla Deltagare</h2>
+    <div class="col-8 col-lg-8" id="show-users">
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        const addUser = document.getElementById("add-user");
+        addUser.addEventListener("click",
+            () => {
+                const form = document.getElementById("new-user-form").elements;
+                const user = new User();
+                user.firstName = form.namedItem("firstName").value;
+                user.lastName = form.namedItem("lastName").value;
+                user.email = form.namedItem("email").value;
+                user.cellphone = form.namedItem("cellphone").value;
+                user.city = form.namedItem("city").value;
+                user.zipcode = form.namedItem("zipcode").value;
+                user.street = form.namedItem("street").value;
+                postData("api/User", user);
+                document.getElementById("new-user-form").reset();
+            });
+
+        const postData = (url = '', data = {}) => {
+            fetch(url,
+                {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+            alert("Deltagaren har lagts till. Uppdatera sidan för att se uppgifterna");
+        }
+
+        const users = [];
+
+        class User {
+            constructor() {
+                this.id = null;
+                this.firstName = null;
+                this.lastName = null;
+                this.email = null;
+                this.cellphone = null;
+                this.city = null;
+                this.zipcode = null;
+                this.street = null;
+                this.takenCourses = null;
+            }
+        }
+
+        const showUsers = () => {
+
+            fetch("/api/User")
+                .then(response => response.json())
+                .then(data => {
+                    const allUsers = data.value;
+                    for (let i = 0; i < allUsers.length; i++) {
+                        const user = new User();
+                        user.id = allUsers[i].id;
+                        user.firstName = allUsers[i].firstName;
+                        user.lastName = allUsers[i].lastName;
+                        user.email = allUsers[i].email;
+                        user.cellphone = allUsers[i].cellphone;
+                        user.city = allUsers[i].city;
+                        user.zipcode = allUsers[i].zipCode;
+                        user.street = allUsers[i].street;
+                        user.takenCourses = allUsers[i].takenCourses;
+                        users.push(user);
+                    }
+                    displayUsers(users);
+                });
+        }
+
+        showUsers();
+
+        function displayUsers(array) {
+            let innerHTML = '';
+            document.getElementById("show-users").innerHTML += innerHTML;
+            for (let i = 0; i < array.length; i++) {
+                const user = array[i];
+                innerHTML = `
+                    <div class="card border-3">
+                        <div class="card-body text-center py-4" >
+                             <form id="update-user${user.id}" action="api/User/${user.id}" method="put">
+                                <label for="update-firstName" class="form-label">Förnamn:</label>
+                                <input type="text" class="form-control" name="update-firstName" id="updateFirstName" value=${user.firstName}>
+
+                                <label for="update-lastName" class="form-label">Efternamn:</label>
+                                <input type="text" class="form-control" name="update-lastName" id="updateLastName" value=${user.lastName}>
+
+                                <label for="update-email" class="form-label">Email:</label>
+                                <input type="text" class="form-control" name="update-email" id="updateEmail" value=${user.email}>
+
+                                <label for="update-cellphone" class="form-label">Telefonnummer:</label>
+                                <input type="text" class="form-control" name="update-cellphone" id="updatecellphone" value=${user.cellphone}>
+
+                                <label for="update-city" class="form-label">Stad:</label>
+                                <input type="text" class="form-control" name="update-city" id="update-city" value=${user.city}>
+
+                                <label for="update-zipcode" class="form-label">Postnummer:</label>
+                                <input type="text" class="form-control" name="update-zipcode" id="update-zipcode" value=${user.zipcode}>
+                                
+                                <label for="update-street" class="form-label">Gata:</label>
+                                <input type="text" class="form-control" name="update-street" id="update-steet" value=${user.street}>
+                                
+                                
+                                </form>
+
+                            <button class="btn mt-3" type="button" id="update-user" onclick="updateUser(${user.id})">Spara ändringar</button>
+
+                        </div>
+                    </div>`;
+                document.getElementById("show-users").innerHTML += innerHTML;
+            }
+        }
+
+        // Put request on User
+        const updateUser = (id) => {
+            console.log("Is there anybody out there?");
+            const form = document.getElementById(`update-user${id}`).elements;
+            const user = new User();
+
+            user.firstName = form.namedItem("update-firstName").value;
+            user.lastName = form.namedItem("update-lastName").value;
+            user.email = form.namedItem("update-email").value;
+            user.cellphone = form.namedItem("update-cellphone").value;
+            user.city = form.namedItem("update-city").value;
+            user.zipcode = form.namedItem("update-zipcode").value;
+            user.street = form.namedItem("update-street").value;
+            fetch(`api/User/${id}`,
+                {
+                    method: "put",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(user)
+                });
+            alert("Ändringarna är sparade.");
+        }
+
+        //Search user by email
+        const showUserDiv = document.getElementById("show-user");
+        const getUser = document.getElementById("search-user");
+
+        getUser.addEventListener("click",
+            () => {
+                const searchedEmail = document.getElementById("searched-email").value;
+                showUser(searchedEmail);
+            });
+
+
+        const showUser = (email) => {
+            showUserDiv.innerHTML = "";
+            fetch(`/api/User/${email}`)
+                .then(response => response.json())
+                .then(data => {
+                    const user = data.value;
+                    showUserByEmail(user);
+
+                });
+        }
+
+        function showUserByEmail(user) {
+            if (user == null) {
+                let innerHTML = `
+                        <div class="card border-3">
+                            <div class="card-body text-center py-4" >
+                                <h4>Det finns ingen deltagare med denna email</h4>
+                                </div>
+                                </div>
+                        `;
+                document.getElementById("show-user").innerHTML += innerHTML;
+            }
+
+            // Show user
+            let innerHTML = `
+                    <div class="card border-3">
+                    <div class="card-body text-center py-4" >
+                    <h4 id="${user.id}">${user.firstName} ${user.lastName}</h4>
+                    </div>
+                    </div>
+                    `;
+            document.getElementById("show-user").innerHTML += innerHTML;
+        }
+
+    </script>
+}

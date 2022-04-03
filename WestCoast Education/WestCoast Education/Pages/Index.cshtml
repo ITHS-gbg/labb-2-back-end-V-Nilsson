@@ -1,0 +1,57 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "WestCoast Education";
+}
+ <!-- INTRO -->
+  <section>
+    <div class="container text-center my-4">
+      <h1 class="display-5">Välkommen till WestCoast Education</h1>
+    </div>
+    <div class="container-lg my-4">
+      <div class="row justify-content-center align-items-center">
+        <div class="col-lg-4 col-md-4 col-sm-6 col-6 text-center">
+          <img class="img-fluid rounded" src="student.jpg" alt="Student vid dator">
+        </div>
+        <div class="col-lg-4 text-center">
+          <p class="lead">Ta del av 40 års erfarenhet av utbildning inom IT</p>
+          <p>Behovet av kompetens inom IT-området ökar ständigt, är du redo att ta ett nytt steg?
+            Vi på WestCoast Education har utbildningar och kurser för dig.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END OF INTRO -->
+
+  <!-- MAIN CONTENT -->
+
+  <section id="aboutus" class="my-5">
+    <div class="container-lg">
+      <div class="row justify-content-center align-items-center">
+        <h2 class="text-center display-6 mt-4">Om oss</h2>
+        <div class="col-lg-9 col-md-8">
+          <p>
+            Vi på WestCoast Education tror på flexibla lösningar för att möta dina krav.
+            Därför har vi både lärarledda utbildningar, på plats och distans, samt möjligheten att köpa enstaka kurser
+            för dig som vill ha större möjlighet att planera din egen tid. Med vår långa erfarenhet av att utbildning inom IT-branschen 
+            vet vi vad som är efterfrågat på arbetsplatser, och kan på bästa sätt förbereda våra studenter för arbetslivet.
+          </p>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6 col-6 mb-5">
+          <img src="code.jpg" alt="Kod" class="img-fluid rounded-circle">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tocourses">
+    <div class="container text-center mb-5">
+      <h5>
+        <a asp-area="" asp-page="/Courses">Till våra Kurser</a>
+
+      </h5>
+    </div>
+  </section>
+
+  <!-- END OF MAIN CONTENT -->

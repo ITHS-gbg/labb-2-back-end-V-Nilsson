@@ -1,60 +1,38 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WestCoast_Education.DAL;
 using WestCoast_Education.DAL.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<WCEStorage>();
+// Add services to the container.
+// Injects WCEContext to the builder, and supplies the connectionstring
+builder.Services.AddDbContext<WCEContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("WCEDbConnectionsString"));
+});
+
+builder.Services.AddRazorPages();
+builder.Services.AddScoped<WCEStorage>();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
 
-app.MapGet("/courses", ([FromServices] WCEStorage storage) =>
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
 {
-    var courses = storage.GetAllCourses();
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
 
-    if (courses.Count <= 0)
-    {
-        return Results.NotFound();
-    }
-
-    return Results.Ok(courses);
-});
-
-app.MapGet("/courses/{id}", ([FromServices] WCEStorage storage, int id) =>
-{
-    var course = storage.GetCourse(id);
-
-    return course is null ? Results.NotFound() : Results.Ok(course);
-});
-
-app.MapPost("/courses", ([FromServices] WCEStorage storage, Course course) =>
-{
-    if (course is null)
-    {
-        return Results.BadRequest();
-    }
-
-    return storage.CreateCourse(course) ? Results.Ok() : Results.Conflict();
-});
-
-app.MapPut("/courses/{id}", ([FromServices] WCEStorage storage, Course course, int id) =>
-{
-    if (course is null)
-    {
-        return Results.BadRequest();
-    }
-
-    return storage.UpdateCourse(id, course) ? Results.Ok() : Results.Conflict();
-
-});
-
-app.MapMethods("/courses/status/{id}", new[] {"PATCH"},
-    ([FromServices] WCEStorage storage, int id) =>
-    {
-        return storage.RetireCourse(id) ? Results.Ok() : Results.BadRequest() ;
-    });
-
-
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseStaticFiles();
+app.UseAuthorization();
+app.MapRazorPages();
+app.MapControllers();
 
 app.Run();

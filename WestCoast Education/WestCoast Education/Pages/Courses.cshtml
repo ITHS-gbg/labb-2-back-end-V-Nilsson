@@ -1,0 +1,238 @@
+﻿@page
+@using WestCoast_Education.DAL.Models
+@model WestCoast_Education.Pages.CoursesModel
+@{
+    ViewData["Title"] = "Våra Kurser";
+
+}
+
+<!-- Display the Courses on cards -->
+
+<section id="coursesSection" class="mt-2">
+    <div class="container-lg my-5">
+        <div class="text-center">
+            <h1 class="display-3">Våra kurser</h1>
+        </div>
+    </div>
+            
+    <!-- End of popular courses -->
+    
+    <!-- Search course by id -->
+    <div class="align-items-center justify-content-center text-center">
+        <h3>Skriv in kursens id</h3>
+        <input type="number" name="id" id="searched-id"/>
+        <button class="btn" id="search-course">Search</button>
+        <div id="show-course"></div>
+    </div>
+
+    <!-- All courses -->
+    <div class="row align-items-center justify-content-center g-0">
+        <h2 class="display-6 text-center my-5">Alla Tillgängliga Kurser</h2>
+        <div class="col-8 col-lg-8" id="courseTitle">
+        </div>
+    </div>
+
+</section>
+
+
+    <!-- Offcanvas for cart -->
+    <div class="offcanvas offcanvas-end" id="cart">
+      <div class="offcanvas-header ">
+        <h1 class="offcanvas-title">Kundvagn</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+      </div>
+      <div class="offcanvas-body" id="showCart">
+      </div>
+      <button class="btn" type="button" onclick="checkout()"
+              data-bs-toggle="modal"
+              data-bs-target="#checkoutModal" >Köp</button>
+    </div>
+    <!-- End of offcanvas for cart -->
+
+    <!-- Modal for checkout -->
+<div
+    class="modal fade"
+    id="checkoutModal"
+    tabindex="-1"
+    aria-labelledby="modal-title"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Tack för ditt köp!</h5>
+                <button
+                    class="btn-close"
+                    type="button"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    En bekräftelse kommer att skickas till din epostadress
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        
+        class Course {
+            constructor() {
+                this.id = null;
+                this.title = null;
+                this.description = null;
+                this.length = null;
+                this.rating = null;
+                this.isActive = true;
+                this.level = null;
+            }
+        }
+
+        const courses = [];
+
+        const cart = [];
+
+        function showCart(array) {
+            document.getElementById("showCart").innerHTML = "";
+            for (let i = 0; i < array.length; i++) {
+                const courseInCart = array[i];
+                let innerHTML = `
+            <div class="row">
+            <p class="text-center">${courseInCart.title}</p>
+            <button class="btn" onclick="removeFromCart(${courseInCart.id})"><i class="bi bi-trash"></i></button>
+            </div>
+        `;
+                document.getElementById("showCart").innerHTML += innerHTML;
+            }
+        }
+
+
+        // Function to show all available courses
+        function displayCards(array) {
+            for (let i = 0; i < array.length; i++) {
+                const course = array[i];
+                // Don't show the retired courses here since they cant be bought. They will be shown at admin page
+                if (!course.isActive) {
+                    continue;
+                }
+                let innerHTML = `
+                    <div class="card border-3">
+                        <div class="card-body text-center py-4" >
+                            <h4 id="${course.title}">${course.title}</h4>
+                            <p>${course.description}</p>
+                            <button class="btn mt-3" onclick="addToCart(${course.id});showCart(cart)">Köp</button>
+                        </div>
+                    </div>`;
+                document.getElementById("courseTitle").innerHTML += innerHTML;
+            }
+        }
+
+
+        function addToCart(id) {
+            let courseToAdd;
+            for (let i = 0; i < courses.length; i++) {
+                if (courses[i].id == id) {
+                    courseToAdd = courses[i];
+                }
+            }
+
+            for (let i = 0; i < cart.length; i++) {
+                if (courseToAdd.id == cart[i].id) {
+                    window.alert("Denna kursen finns redan i din kundvagn!");
+                    return;
+                }
+            }
+            cart.push(courseToAdd);
+        }
+
+        function removeFromCart(id) {
+            for (let i = 0; i < cart.length; i++) {
+                if (cart[i].id == id) {
+                    cart.splice(i, 1);
+                }
+            }
+            showCart(cart);
+        }
+
+        function checkout() {
+            cart.splice(0, cart.length);
+            showCart(cart);
+        }
+        
+        const showCourses = () => {
+            // Get request
+            fetch("/api/Course")
+                .then(response => response.json())
+                .then(data => {
+                    
+                    const allCourses = data.value;
+                    for (let i = 0; i < allCourses.length; i++) {
+                        const course = new Course();
+                        course.title = allCourses[i].title;
+                        course.id = allCourses[i].id;
+                        course.description = allCourses[i].description;
+                        course.isActive = allCourses[i].isActive;
+                        course.length = allCourses[i].length;
+                        course.rating = allCourses[i].rating;
+                        course.level = allCourses[i].level;
+                        courses.push(course);
+                    }
+                    displayCards(courses);
+                });
+        }
+
+        showCourses();
+
+        //Search course by id
+        const showCourseDiv = document.getElementById("show-course");
+        const getCourse = document.getElementById("search-course");
+
+        getCourse.addEventListener("click",
+            () => {
+                const searchedId = document.getElementById("searched-id").value;
+                showCourse(searchedId);
+            });
+
+
+        const showCourse = (id) => {
+            showCourseDiv.innerHTML = "";
+            fetch(`/api/Course/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    const course = data.value;
+                    showCourseById(course);
+
+                });
+        }
+
+        function showCourseById(course) {
+            if (course == null) {
+                let innerHTML = `
+                        <div class="card border-3">
+                            <div class="card-body text-center py-4" >
+                                <h4>Det finns ingen kurs med detta id</h4>
+                                </div>
+                                </div>
+                        `;
+                document.getElementById("show-course").innerHTML += innerHTML;
+            }
+
+            // Show course
+            let innerHTML = `
+                    <div class="card border-3">
+                    <div class="card-body text-center py-4" >
+                    <h4 id="${course.title}">${course.title}</h4>
+                    <p>${course.description}</p>
+                    <button class="btn mt-3" onclick="addToCart(${course.id});showCart(cart)">Köp</button>
+                    </div>
+                    </div>
+                    `;
+            document.getElementById("show-course").innerHTML += innerHTML;
+        }
+    </script>
+}

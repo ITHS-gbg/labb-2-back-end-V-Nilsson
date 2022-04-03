@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WestCoastEducation.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" />
+</head>
+<body>
+    <header>
+        @*        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">WestCoastEducation</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>*@
+        <nav class="navbar navbar-expand-md cwhite py-4" id="mynav">
+            <div class="container-lg">
+                <a class="navbar-brand cwhite" asp-area="" asp-page="/Index">WestCoast Education</a>
+
+                <div class="justify-content-end align-center" id="main-nav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link cwhite">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link cwhite" asp-area="" asp-page="/Courses">Kurser</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link cwhite" asp-area="" asp-page="/Admin">Admin</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link cwhite" asp-area="" asp-page="/Users">Deltagare</a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link cwhite" data-bs-toggle="offcanvas" data-bs-target="#cart">
+                                <i class="bi bi-cart"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- / Navbar -->
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+@*   <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - WestCoastEducation - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>*@
+
+<footer class="text-center text-lg-start text-white mt-auto footer" id="contact">
+    <!-- Grid container -->
+    <div class="container p-3 pb-0 ">
+        <!-- Section: Links -->
+        <section class="">
+            <!--Grid row-->
+            <div class="row">
+                <!-- Grid column --> 
+                <div class="col-lg-8  my-2">
+                    <p class="my-1 d-inline pe-2"><i class="bi bi-house-door"></i> IT-vägen 1337, 444 00, Göteborg</p>
+                    <p class="my-1 d-inline px-2"><i class="bi bi-envelope"></i> info@wce.se</p>
+                    <p class="my-1 d-inline px-2"><i class="bi bi-phone"></i> 031-123 456 </p>
+                </div>
+                <div class="col-lg-4 justify-content-end align-center">
+                    <p class="d-inline p-1">
+                        <a href="https://www.linkedin.com" target="_blank">
+                            <i class="bi bi-linkedin"></i>
+                        </a></p>
+                    <p class="d-inline p-1"> 
+                        <a href="https://github.com" target="_blank">
+                            <i class="bi bi-github"></i>
+                        </a></p> 
+                    <p class="d-inline p-1"> 
+                        <a href="https://github.com" target="_blank">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                    </p> 
+                    <p class="d-inline p-1"> 
+                        <a href="https://github.com" target="_blank">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                    </p>
+                </div>
+                <!-- Grid column -->
+            </div>
+        </section>
+        </div>
+    <!--Grid row-->
+    <!-- Section: Links -->
+    </div>
+    <!-- Grid container -->
+
+    <!-- Copyright -->
+    <div class="text-center p-3" id="mynav">
+        &copy; 2022 Victor Nilsson
+    </div>
+    <!-- Copyright -->
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
