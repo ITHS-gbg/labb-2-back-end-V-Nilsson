@@ -12,11 +12,6 @@
     <div class="container-lg my-5">
         <div class="text-center">
             <h1 class="display-3">Våra kurser</h1>
-            <h2 class="display-6 mb-5">Populära kurser</h2>
-        </div>
-
-        <!-- Popular courses -->
-        <div class="row align-items-center justify-content-center" id="popularCourses">
         </div>
     </div>
             
@@ -32,12 +27,8 @@
 
     <!-- All courses -->
     <div class="row align-items-center justify-content-center g-0">
-
-        <h2 class="display-6 text-center my-5">Alla Kurser</h2>
+        <h2 class="display-6 text-center my-5">Alla Tillgängliga Kurser</h2>
         <div class="col-8 col-lg-8" id="courseTitle">
-              
-             
-
         </div>
     </div>
 
@@ -98,6 +89,7 @@
                 this.length = null;
                 this.rating = null;
                 this.isActive = true;
+                this.level = null;
             }
         }
 
@@ -119,42 +111,12 @@
             }
         }
 
-        // Function to display top 3 courses
-        function displayPopularCourses(array) {
-            for (let i = 0; i < 3; i++) {
-                const course = array[i];
-                // Don't show the retired courses here since they can't be bought.
-                if (!course.isActive) {
-                    continue;
-                }
-                let innerHTML = `
-    <div class="col-lg-3 col-8">
-    <div class="card border-2">
-        <div class="card-body text-center py-4">
-            <h4 class="card-title">
-                ${course.title}
-            </h4>
-            <p class="lead card-subtitle">
-                ${course.description}
-            </p>
-            <p class="card-text">
-                Betyg: ${course.rating} / 10
-            </p>
-            <button class="btn" onclick="addToCart(${course.id});showCart(cart)">Köp</button>
-        </div>
-    </div>
-    </div>
-    `
-                document.getElementById("popularCourses").innerHTML += innerHTML;
-            }
-        };
-
 
         // Function to show all available courses
         function displayCards(array) {
             for (let i = 0; i < array.length; i++) {
                 const course = array[i];
-                // Don't show the retired courses here since they cant be bought.
+                // Don't show the retired courses here since they cant be bought. They will be shown at admin page
                 if (!course.isActive) {
                     continue;
                 }
@@ -201,15 +163,13 @@
             cart.splice(0, cart.length);
             showCart(cart);
         }
-
-        //fetch structure
+        
         const showCourses = () => {
             // Get request
             fetch("/api/Course")
                 .then(response => response.json())
                 .then(data => {
-                    // Do stuff
-                    console.log(data.value);
+                    
                     const allCourses = data.value;
                     for (let i = 0; i < allCourses.length; i++) {
                         const course = new Course();
@@ -219,11 +179,9 @@
                         course.isActive = allCourses[i].isActive;
                         course.length = allCourses[i].length;
                         course.rating = allCourses[i].rating;
-                        console.log(course);
+                        course.level = allCourses[i].level;
                         courses.push(course);
                     }
-                    courses.sort((a, b) => a.rating < b.rating);
-                    displayPopularCourses(courses);
                     displayCards(courses);
                 });
         }
@@ -264,7 +222,7 @@
                 document.getElementById("show-course").innerHTML += innerHTML;
             }
 
-            // Show new course
+            // Show course
             let innerHTML = `
                     <div class="card border-3">
                     <div class="card-body text-center py-4" >

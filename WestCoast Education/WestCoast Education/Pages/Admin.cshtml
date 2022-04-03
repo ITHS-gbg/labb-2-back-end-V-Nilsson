@@ -148,7 +148,7 @@
             fetch("/api/Course")
                 .then(response => response.json())
                 .then(data => {
-                    // Do stuff
+                   
                     const allCourses = data.value;
                     for (let i = 0; i < allCourses.length; i++) {
                         const course = new Course();
@@ -168,8 +168,7 @@
 
         function displayCourses(array) {
             for (let i = 0; i < array.length; i++) {
-                // Empty content for when we update courses after removal or addition
-                document.getElementById("courseTitle").innerHTML += '';
+                
                 const course = array[i];
                 let courseStatus = null;
                 let currentLevel = null;
@@ -186,8 +185,6 @@
                     currentLevel = "Avancerad";
 
                 }
-                // From update course button
-                // data-bs-toggle="modal" data-bs-target="#editCourseModal
                 let innerHTML = `
                     <div class="card border-3">
                         <div class="card-body text-center py-4" >
@@ -233,7 +230,6 @@
                 {
                     method: "delete"
                 });
-            // TODO Refresh page without the removed course
             alert("Kursen är borttagen. Uppdatera sidan för att visa förändringar");
         }
 
